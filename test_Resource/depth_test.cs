@@ -34,6 +34,7 @@ public class depth_test : MonoBehaviour {
 	public Text depthText;
 	public Text _Time;
 	public float _timeCnt=0;
+	public string strTime;
 
 	public int temp;
 	// Use this for initialization
@@ -85,6 +86,7 @@ public class depth_test : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
+
 		if (manager && manager.IsInitialized ()) {
 			foregroundTex = manager.GetUsersLblTex ();
 		}
@@ -97,13 +99,18 @@ public class depth_test : MonoBehaviour {
 			float posZ = posUser.z * 100;
 			float posX = posUser.x * 100;
 
-			_timeCnt += Time.deltaTime;
-			_Time.text = "Time : " + _timeCnt.ToString ("00:00.00");
 
 			if (posZ >= 100 && posZ <= 200 && posX <= 50 && posX >= -50) {
 				if (SceneMove.sflag == true) {
 					KinectManager.myFlag = 2;
 				}
+				_timeCnt += Time.deltaTime;
+				int min = (int)(_timeCnt / 60) % 60;
+				float printTime = _timeCnt;
+				if (printTime >= 60)
+					printTime -= 60;
+				strTime = min.ToString ("00") + ":" + printTime.ToString("00.00");
+				_Time.text = "Time : " + strTime;
 				depthText.text = "depth: " + posZ.ToString ();
 				xText.text = "X : " + posX.ToString ();
 				temp = 1;
@@ -118,12 +125,5 @@ public class depth_test : MonoBehaviour {
 
 		}
 
-	}
-	void OnGUI()
-	{
-		if(foregroundTex)
-		{
-			GUI.DrawTexture(foregroundGuiRect, foregroundTex);
-		}
 	}
 }
