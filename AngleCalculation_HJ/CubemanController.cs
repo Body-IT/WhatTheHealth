@@ -100,22 +100,26 @@ public class CubemanController : MonoBehaviour
     public Vector3 Hand_Tip_Right23;
     public Vector3 Thumb_Right24;
 
-    public Vector3 v1;
-    public Vector3 v2;
     public float v1mag1;
     public Vector3 v1norm1;
     public float v2mag1;
     public Vector3 v2norm1;
     public float res1;
-    public float angleFloat;
-    public int angleInt;
+
+
+    public int shoulderLeftAngle;
+    public int shoulderRightAngle;
+    public int kneeLeftAngle;
+    public int kneeRightAngle;
+    public int elbowLeftAngle;
+    public int elbowRightAngle;
+
+
     public float angleRes;
 
 
     void Start () 
 	{
-
-
         //store bones in a list for easier access
         bones = new GameObject[] {
 			Hip_Center,
@@ -172,11 +176,12 @@ public class CubemanController : MonoBehaviour
 	}
 	
 
-	void Update () 
+	void Update ()
 	{
 		KinectManager manager = KinectManager.Instance;
 		
 		// get 1st player
+        //HJ//user id is person count.
 		Int64 userID = manager ? manager.GetUserIdByIndex(playerIndex) : 0;
 		
 		if(userID <= 0)
@@ -212,6 +217,7 @@ public class CubemanController : MonoBehaviour
 		}
 		
 		// set the position in space
+        //bodyFrame.bodyData[index].position
 		Vector3 posPointMan = manager.GetUserPosition(userID);
 		Vector3 posPointManMP = new Vector3(posPointMan.x, posPointMan.y, !mirroredMovement ? -posPointMan.z : posPointMan.z);
 		
@@ -223,6 +229,7 @@ public class CubemanController : MonoBehaviour
 			initialPosOffset = posPointMan;
 		}
 
+        //posPointMan 과 relPosUser의 차이는 무엇인가.
 		Vector3 relPosUser = (posPointMan - initialPosOffset);
 		relPosUser.z =!mirroredMovement ? -relPosUser.z : relPosUser.z;
 
@@ -243,7 +250,7 @@ public class CubemanController : MonoBehaviour
 					bones[i].gameObject.SetActive(true);
 
                    
-
+                    //getJointJinectPosition과 getJointPosition의 차이는?
                     Vector3 posJoint = manager.GetJointPosition(userID, joint);
 					posJoint.z = !mirroredMovement ? -posJoint.z : posJoint.z;
 					
@@ -257,65 +264,78 @@ public class CubemanController : MonoBehaviour
 						posJoint.x = -posJoint.x;
 						posJoint.z = -posJoint.z;
 					}
+                
 
-
-                    if (i == 1)
+                    if (i == 0)
+                        Hip_Center0 = posJoint;
+                    else if (i == 1)
                         Spine1 = posJoint;
+                    else if (i == 2)
+                        Neck2 = posJoint;
+                    else if (i == 3)
+                        Head3 = posJoint;
                     else if (i == 4)
                         Shoulder_Left4 = posJoint;
                     else if (i == 5)
                         Elbow_Left5 = posJoint;
+                    else if (i == 6)
+                        Wrist_Left6 = posJoint;
+                    else if (i == 7)
+                        Hand_Left7 = posJoint;
+                    else if (i == 8)
+                        Shoulder_Right8 = posJoint;
+                    else if (i == 9)
+                        Elbow_Right9= posJoint;
+                    else if (i == 10)
+                        Wrist_Right10 = posJoint;
+                    else if (i == 11)
+                        Hand_Right11 = posJoint;
+                    else if (i == 12)
+                        Hip_Left12 = posJoint;
+                    else if (i == 13)
+                        Knee_Left13 = posJoint;
+                    else if (i == 14)
+                        Ankle_Left14 = posJoint;
+                    else if (i == 15)
+                        Foot_Left15 = posJoint;
+                    else if (i == 16)
+                        Hip_Right16 = posJoint;
+                    else if (i == 17)
+                        Knee_Right17 = posJoint;
+                    else if (i == 18)
+                        Ankle_Right18 = posJoint;
+                    else if (i == 19)
+                        Foot_Right19 = posJoint;
                     else if (i == 20)
                         Spine_Shoulder20 = posJoint;
-                    else if (i == 0)
-                        Hip_Center0 = posJoint;
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    v1 =new Vector3(Spine1.x - Spine_Shoulder20.x , Spine1.y - Spine_Shoulder20.y , Spine1.y - Spine_Shoulder20.y);
-                    v2 =new Vector3(Elbow_Left5.x - Shoulder_Left4.x, Elbow_Left5.y - Shoulder_Left4.y, Elbow_Left5.y - Shoulder_Left4.y);
 
-                    angleFloat = Vector3.Angle(v1, v2);
-                   /* if (Vector3.Dot(Vector3.Cross(v1, v2), Vector3.up) >= 0.0)
-                    {
-                        angleFloat = 360.0f - angleFloat;
-                        if (angleFloat > 359.9999f)
-                            angleFloat -= 360.0f;
-                    }*/
-                    angleInt = (int)angleFloat;
-                    // angleInt = (int) angleFloat - 39;
-
-                    //Vector3 pos = cubemanController.Shoulder_Left4;
-                    testText.transform.localPosition = Shoulder_Left4;
-                 //   realText.transform.localPosition = Shoulder_Left4;
-                 //   realText.text = "angle : " + cubemanController.angleInt;
-
-
-
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     /*
-                                        //public float v1mag
-                                         v1mag1 = ((v1.x * v1.x) + (v1.y * v1.y) + (v1.z * v1.z));
-                                         v1mag1= (float)Math.Sqrt(v1mag1);
-                                         v1norm1 = new Vector3(v1.x / v1mag1, v1.y / v1mag1, v1.z / v1mag1);
-                                         //public float v2mag
-                                         v2mag1 = ((v2.x * v2.x) + (v2.y * v2.y) + (v2.z * v2.z));
-                                         v2mag1 = (float)Math.Sqrt(v2mag1);
-                                         v2norm1 = new Vector3(v2.x / v2mag1, v2.y / v2mag1, v2.z / v2mag1);
+                       public int shoulderLeftangleInt;
+                        public int shoulderRightangleInt;
+                        public int kneeLeftangleInt;
+                        public int kneeRightangleInt;
+                        public int elbowLeftangleInt;
+                        public int elbowRightangleInt;
+                        */
 
-                                         res1 = (v1norm1.x * v2norm1.x) + (v1norm1.y * v2norm1.y) + (v1norm1.z * v2norm1.z);
-                                         angle1 = (float)Math.Acos(res1)*60;
-                    */
-                    //////////
-                    //posJoint
-                    /////////////////////////////////////////////////////////////
+
+                    //      angleCal(a,b,c,d)
+                    //      means   a -----> b
+                    //      means   c -----> d
+                    //      
+                    shoulderLeftAngle = angleCal(Spine_Shoulder20,Spine1, Shoulder_Left4, Elbow_Left5);
+                    shoulderRightAngle = angleCal(Spine_Shoulder20, Spine1, Shoulder_Right8, Elbow_Right9);
+                    kneeLeftAngle = angleCal(Knee_Left13, Hip_Left12, Knee_Left13, Ankle_Left14);
+                    kneeRightAngle = angleCal(Knee_Right17, Hip_Right16, Knee_Right17, Ankle_Right18);
+                    elbowLeftAngle = angleCal(Elbow_Left5, Shoulder_Left4, Elbow_Left5, Wrist_Left6);
+                    elbowRightAngle = angleCal(Elbow_Right9, Shoulder_Right8, Elbow_Right9, Wrist_Right10);
+
                     bones[i].transform.localPosition = posJoint;
-                   // bones[i].transform.localPosition = Shoulder_Left4;
                     bones[i].transform.rotation = rotJoint;
-                    ////////////////////////////////////////////////////////////
-
-
-                    //////////////////////
-                    ////////////////////////////////////
+   
                     
-                  /*  if (lines[i] == null && skeletonLine != null) 
+                    if (lines[i] == null && skeletonLine != null) 
 					{
 						lines[i] = Instantiate((i == 22 || i == 24) && debugLine ? debugLine : skeletonLine) as LineRenderer;
 						lines[i].transform.parent = transform;
@@ -334,7 +354,7 @@ public class CubemanController : MonoBehaviour
 						lines[i].SetPosition(0, posParent);
 						lines[i].SetPosition(1, posJoint2);
 					}
-                    */
+                    
 
 				}
 				else
@@ -349,6 +369,20 @@ public class CubemanController : MonoBehaviour
 			}	
 		}
 	}
+
+
+    //  calculation angle using 4 point.
+    //  v1 vector means   a -----> b
+    //  v2 vector means   c -----> d
+    int angleCal(Vector3 a, Vector3 b, Vector3 c , Vector3 d )
+    {
+       
+        Vector3 v1 = new Vector3((b.x - a.x), (b.y - a.y), (b.z - a.z));
+        Vector3 v2 = new Vector3((d.x - c.x), (d.y - c.y), (d.z - c.z));
+        float angleFloat = Vector3.Angle(v1, v2);
+
+        return (int)angleFloat;
+    }
 
 }
 
