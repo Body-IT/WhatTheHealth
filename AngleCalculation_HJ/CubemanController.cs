@@ -2,7 +2,6 @@ using UnityEngine;
 //using Windows.Kinect;
 using System.Collections;
 using UnityEngine.UI;
-
 using System;
 
 
@@ -107,19 +106,20 @@ public class CubemanController : MonoBehaviour
     public float res1;
 
 
-    public int shoulderLeftAngle;
-    public int shoulderRightAngle;
-    public int kneeLeftAngle;
-    public int kneeRightAngle;
-    public int elbowLeftAngle;
-    public int elbowRightAngle;
-
+    public int shoulderLeftAngle=0;
+    public int shoulderRightAngle = 0;
+    public int kneeLeftAngle = 0;
+    public int kneeRightAngle = 0;
+    public int elbowLeftAngle = 0;
+    public int elbowRightAngle = 0;
+    public int backAngle = 0;
 
     public float angleRes;
 
 
     void Start () 
 	{
+       // a = 0;
         //store bones in a list for easier access
         bones = new GameObject[] {
 			Hip_Center,
@@ -178,6 +178,7 @@ public class CubemanController : MonoBehaviour
 
 	void Update ()
 	{
+
 		KinectManager manager = KinectManager.Instance;
 		
 		// get 1st player
@@ -199,7 +200,9 @@ public class CubemanController : MonoBehaviour
 			{
 				transform.rotation = initialRotation;
 			}
-            //bone.Length = 25
+           
+            //initial print bone
+            
 			for(int i = 0; i < bones.Length; i++) 
 			{
 				bones[i].gameObject.SetActive(true);
@@ -212,6 +215,7 @@ public class CubemanController : MonoBehaviour
 					lines[i].gameObject.SetActive(false);
 				}
 			}
+            
 
 			return;
 		}
@@ -309,31 +313,21 @@ public class CubemanController : MonoBehaviour
                     else if (i == 20)
                         Spine_Shoulder20 = posJoint;
 
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    /*
-                       public int shoulderLeftangleInt;
-                        public int shoulderRightangleInt;
-                        public int kneeLeftangleInt;
-                        public int kneeRightangleInt;
-                        public int elbowLeftangleInt;
-                        public int elbowRightangleInt;
-                        */
-
-
-                    //      angleCal(a,b,c,d)
-                    //      means   a -----> b
-                    //      means   c -----> d
-                    //      
-                    shoulderLeftAngle = angleCal(Spine_Shoulder20,Spine1, Shoulder_Left4, Elbow_Left5);
-                    shoulderRightAngle = angleCal(Spine_Shoulder20, Spine1, Shoulder_Right8, Elbow_Right9);
-                    kneeLeftAngle = angleCal(Knee_Left13, Hip_Left12, Knee_Left13, Ankle_Left14);
-                    kneeRightAngle = angleCal(Knee_Right17, Hip_Right16, Knee_Right17, Ankle_Right18);
-                    elbowLeftAngle = angleCal(Elbow_Left5, Shoulder_Left4, Elbow_Left5, Wrist_Left6);
-                    elbowRightAngle = angleCal(Elbow_Right9, Shoulder_Right8, Elbow_Right9, Wrist_Right10);
+                    //Calculate joint angle using 4 coordinate of point.
+                    shoulderLeftAngle       =   angleCal(Spine_Shoulder20,Spine1, Shoulder_Left4, Elbow_Left5);
+                    shoulderRightAngle      =   angleCal(Spine_Shoulder20, Spine1, Shoulder_Right8, Elbow_Right9);
+                    kneeLeftAngle           =   angleCal(Knee_Left13, Hip_Left12, Knee_Left13, Ankle_Left14);
+                    kneeRightAngle          =   angleCal(Knee_Right17, Hip_Right16, Knee_Right17, Ankle_Right18);
+                    elbowLeftAngle          =   angleCal(Elbow_Left5, Shoulder_Left4, Elbow_Left5, Wrist_Left6);
+                    elbowRightAngle         =   angleCal(Elbow_Right9, Shoulder_Right8, Elbow_Right9, Wrist_Right10);
+                    backAngle               =   180-angleCal(Spine1, Spine_Shoulder20, Spine1, Hip_Center0);
 
                     bones[i].transform.localPosition = posJoint;
                     bones[i].transform.rotation = rotJoint;
    
+                    
+                    /*
+                    // print skeleton line to sceen 
                     
                     if (lines[i] == null && skeletonLine != null) 
 					{
@@ -354,7 +348,7 @@ public class CubemanController : MonoBehaviour
 						lines[i].SetPosition(0, posParent);
 						lines[i].SetPosition(1, posJoint2);
 					}
-                    
+                    */
 
 				}
 				else
@@ -371,9 +365,15 @@ public class CubemanController : MonoBehaviour
 	}
 
 
-    //  calculation angle using 4 point.
-    //  v1 vector means   a -----> b
-    //  v2 vector means   c -----> d
+
+    /// <summary>
+    /// Calculate joint angle using 4 coordinate of point.
+    /// </summary>
+    /// <returns>Joint angle</returns>
+    /// <param name="a">coordinate of point a</param>
+    /// <param name="b">coordinate of point b</param>
+    /// <param name="c">coordinate of point c</param>
+    /// <param name="d">coordinate of point d</param>
     int angleCal(Vector3 a, Vector3 b, Vector3 c , Vector3 d )
     {
        
