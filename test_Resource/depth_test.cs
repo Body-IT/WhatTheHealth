@@ -35,11 +35,15 @@ public class depth_test : MonoBehaviour {
 	public Text _Time;
 	public float _timeCnt=0;
 	public string strTime;
+	public GameObject KinectController;
 
-	public int temp;
+	public int check_Exe;
 	// Use this for initialization
 	void Start () {
-		temp = 0;
+		if (parameter.cnt != 0) {
+			Destroy (KinectController);
+		}
+		check_Exe = 0;
 		manager = KinectManager.Instance;
 
 		if(manager && manager.IsInitialized())
@@ -94,16 +98,16 @@ public class depth_test : MonoBehaviour {
 		if (manager && manager.IsUserDetected () && foregroundCamera) {
 			long userId = manager.GetUserIdByIndex (playerIndex);  // manager.GetPrimaryUserID();
 			Vector3 posUser = manager.GetUserPosition (userId);
-			//Vector3 posUser = manager.GetJointKinectPosition(userId,24);
-			//KinectInterop.DepthSensorPlatform sensor = manager.GetRawDepthMap ();
+
 			float posZ = posUser.z * 100;
 			float posX = posUser.x * 100;
 
-
+			//when come into the zone
 			if (posZ >= 100 && posZ <= 200 && posX <= 50 && posX >= -50) {
-				if (SceneMove.sflag == true) {
-					KinectManager.myFlag = 2;
+				if (parameter.sflag == true) {
+					parameter.myFlag = 2;
 				}
+				//count time
 				_timeCnt += Time.deltaTime;
 				int min = (int)(_timeCnt / 60) % 60;
 				float printTime = _timeCnt;
@@ -111,15 +115,18 @@ public class depth_test : MonoBehaviour {
 					printTime -= 60;
 				strTime = min.ToString ("00") + ":" + printTime.ToString("00.00");
 				_Time.text = "Time : " + strTime;
-				depthText.text = "depth: " + posZ.ToString ();
-				xText.text = "X : " + posX.ToString ();
-				temp = 1;
-					
+				//depthText.text = "depth: " + posZ.ToString ();
+				//xText.text = "X : " + posX.ToString ();
+				//exercise check
+				check_Exe = 1;
+
+			//when egress the zone
 			} else {
 				depthText.text = "depth: X";
 				xText.text = "X : X";
-				if (temp == 1) {
-					KinectManager.myFlag = 1;
+				//confirm exercise check
+				if (check_Exe == 1) {
+					parameter.myFlag = 1;
 				}
 			}
 
