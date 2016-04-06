@@ -105,6 +105,7 @@ public class depth_test : MonoBehaviour {
 			//when come into the zone
 			if (posZ >= 100 && posZ <= 200 && posX <= 50 && posX >= -50) {
 				if (parameter.sflag == true) {
+					//change exercise_view signal
 					parameter.myFlag = 2;
 				}
 				//count time
@@ -126,6 +127,7 @@ public class depth_test : MonoBehaviour {
 				xText.text = "X : X";
 				//confirm exercise check
 				if (check_Exe == 1) {
+					//change rest_view signal
 					parameter.myFlag = 1;
 				}
 			}
