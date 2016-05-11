@@ -16,7 +16,7 @@ public class NewBehaviourScript : MonoBehaviour {
     private static void SelectUsingAdapter()
     {
         DataSet ds = new DataSet();
-        string connStr = "server=localhost;Uid=root; password=qwe123; database=db_test";
+        string connStr = "server=localhost;Uid=root; password=1111; database=db_test";
         MySqlConnection conn = null;
         MySqlDataReader rdr = null;
         try
@@ -70,7 +70,7 @@ public class NewBehaviourScript : MonoBehaviour {
 
             while (rdr.Read())
             {
-                Console.WriteLine(rdr.GetString(1));
+                
             }
         }
         catch (Exception e)
@@ -92,7 +92,6 @@ public class NewBehaviourScript : MonoBehaviour {
     {
         //Insert();
         SelectUsingAdapter();
-        //Debug.Log("HI");
     }
 
     // Update is called once per frame
