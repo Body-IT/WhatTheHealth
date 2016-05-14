@@ -17,4 +17,5 @@ public class parameter : MonoBehaviour {
 	public static Text[] text = new Text[20];
 	public static string[] ss = new string[20];
 	public static int cnt;
+	public static string db_id = "id = \"01012345678\""
 }
