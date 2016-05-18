@@ -42,7 +42,7 @@ public class MySqlConnector : MonoBehaviour {
 
 		//id = System.DateTime.Now.ToString("yyMMdd.hhmm");
 		id = "01012345678";
-		date = System.DateTime.Now.ToString ("yymmdd");
+		date = System.DateTime.Now.ToString ("yyMMdd");
 		type = 1;
 		sets = 2;
 		rap = 14;
